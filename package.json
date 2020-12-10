@@ -8,12 +8,32 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/checkbox": "^0.5.6",
+    "@react-native-community/image-editor": "^2.3.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "axios": "^0.21.0",
     "expo": "~39.0.2",
+    "expo-asset": "~8.2.0",
+    "expo-camera": "~9.0.0",
+    "expo-face-detector": "~8.3.0",
+    "expo-image-manipulator": "~8.3.0",
+    "expo-permissions": "~9.3.0",
     "expo-status-bar": "~1.0.2",
+    "face-api.js": "^0.22.2",
+    "native-base": "^2.13.14",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
-    "react-native-web": "~0.13.12"
+    "react-native-camera": "^3.40.0",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-reanimated": "^1.13.2",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.15.0",
+    "react-native-web": "~0.13.12",
+    "react-navigation": "^4.4.3",
+    "react-navigation-drawer": "^2.6.0",
+    "react-navigation-stack": "^2.10.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
