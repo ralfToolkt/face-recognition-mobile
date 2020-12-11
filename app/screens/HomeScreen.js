@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, Text, View, TouchableOpacity, Image, Alert } from 'react-native';
 import styles from '../../styles'
 import axios from 'axios'
 
-
+import * as Location from 'expo-location';
 import { Camera } from 'expo-camera';
 import { Asset } from 'expo-asset';
 import * as FaceDetector from 'expo-face-detector'
 import * as Permissions from 'expo-permissions';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { UserContext } from '../contexts/UserContext.js'
+
+const API_KEY = "AIzaSyBTp9sgdaeSKyXQVn3qBBLR_yBYS19Q05w";
+const URL_GEO = `https://maps.google.com/maps/api/geocode/json?key=${API_KEY}&latlng=`;
 
 export default function HomeScreen() {
     const [camera, setCamera] = useState({
@@ -25,10 +28,48 @@ export default function HomeScreen() {
 
     const { user } = useContext(UserContext)
 
-    const askPermission = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        setCamera(prevState => ({ ...prevState, hasCameraPermission: status === 'granted' }));
-    }
+    // for geocode
+    const [address, setAddress] = useState();
+    const [longitude, setLongitude] = useState();
+    const [latitude, setLatitude] = useState();
+
+    //  permision 
+    useEffect(() => {
+        function setPosition({ coords: { latitude, longitude } }) {
+            setLongitude(longitude);
+            setLatitude(latitude);
+            axios.post(`${URL_GEO}${latitude},${longitude}`)
+                .then(res => {
+                    console.log(res.data.results[0].formatted_address);
+                    setAddress(res.data.results[0].formatted_address);
+                });
+        }
+        navigator.geolocation.getCurrentPosition(setPosition);
+
+        let watcher = navigator.geolocation.watchPosition(
+            setPosition,
+            (err) => console.error(err),
+            { enableHighAccuracy: true }
+        );
+        
+        (async () => {
+            const { status } = await Camera.requestPermissionsAsync();
+            setCamera(prevState => ({ ...prevState, hasCameraPermission: status === 'granted'}))
+        })();    
+        return () => {
+            navigator.geolocation.clearWatch(watcher);
+        }
+    }, []);
+
+    // get location
+    // async function setPosition() {
+    //     await axios.get(`${URL_GEO}${latitude},${longitude}`)
+    //         .then(res => {
+    //             console.log(res.data.results[0].formatted_address);
+    //             setAddress(res.data.results[0].formatted_address.toString());
+    //             console.log(address);
+    //         });
+    // }
 
     const snap = async () => {
         // console.log(snap);
@@ -49,7 +90,7 @@ export default function HomeScreen() {
         const options = { mode: FaceDetector.Constants.Mode.fast, detectLandmarks: FaceDetector.Constants.Landmarks.all };
         await FaceDetector.detectFacesAsync(image.uri, options)
         .then(res => {
-            console.log(res);
+            // console.log(res);
             ImageManipulator.manipulateAsync(
                 image.uri,
                 [{
@@ -64,15 +105,21 @@ export default function HomeScreen() {
                 ).then(res => setPhotoBase64(res.base64))
             // ).then(res => setImageUri(res.uri))
             .catch(e => alert('Try to center to get better image'))
-        })
-        
+        })        
     }
 
-    const attendance = async (image) => {
+
+    async function attendance(image) {
+        console.log('attendance');
+        // setPosition()
+        console.log(address);
         const url = 'http://139.162.9.124:1369'
         let bodyFormData = new FormData();
         bodyFormData.append('token', user.token);
         bodyFormData.append('image', image);
+        bodyFormData.append('longitude', longitude);
+        bodyFormData.append('latitude', latitude);
+        bodyFormData.append('address', address);
         await axios({
             method: 'post',
             url: `${url}/api/attendance`,
@@ -80,25 +127,15 @@ export default function HomeScreen() {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
             .then(res => {
-                console.log(res.data);
-                
+                // console.log(res.data);
+
                 alert(res.data.result)
             })
             .catch(e => {
-                console.log('error ' + e);
+                Alert('error ' + e);
+                // console.log('error ' + e);
             }) 
-        // await axios.post(`${url}/api/attendance?token=${token}&image=${image}`)
-        //     .then(res => {
-        //         console.log(res);
-        //     })
-        //     .catch(e => {
-        //         console.log('error ' + e);
-        //     }) 
     }
-
-    useEffect(() => {
-        askPermission()
-    }, []);
 
 
     const handleFacesDetected = ({ faces }) => {
@@ -117,11 +154,7 @@ export default function HomeScreen() {
         }
     };
 
-    if (camera.hasCameraPermission === null) {
-        return <Text>Null</Text>;
-    } else if (camera.hasCameraPermission === false) {
-        return <Text>No access to camera</Text>;
-    } else {
+    if (address) {
         return (
             <View style={{ flex: 1 }}>
                 {/* <Image
@@ -139,7 +172,7 @@ export default function HomeScreen() {
                         tracking: true,
                     }}
                 >
-                    
+
                     <View
                         style={{
                             flex: 1,
@@ -149,18 +182,18 @@ export default function HomeScreen() {
                             bottom: 100,
                             left: 100
                         }}>
-                        {camera.faceDetected ? 
+                        {camera.faceDetected ?
                             <TouchableOpacity
-                                onPress={() => snap(false)}>
+                                onPress={() => snap()}>
                                 <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
                                     {' '}Check Attendance{' '}
                                 </Text>
                             </TouchableOpacity>
-                        
-                        : <Text style={{ color: 'red', fontSize: 25 }}>
-                            No Face Detected
+
+                            : <Text style={{ color: 'red', fontSize: 25 }}>
+                                No Face Detected
                         </Text>}
-                        
+
                     </View>
                     <View
 
@@ -186,11 +219,22 @@ export default function HomeScreen() {
                                 Flip{' '}
                             </Text>
                         </TouchableOpacity>
-                    </View>                    
+                    </View>
                 </Camera>
             </View>
+        );
+    } else {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#00ff00" />
+            </View>
         )
-
-        
+    } 
+    if (camera.hasCameraPermission === null) {
+        return <Text>Null</Text>;
+    } else if (camera.hasCameraPermission === false) {
+        return <Text>No access to camera</Text>;
+    } else {
+        return null
     }
 }

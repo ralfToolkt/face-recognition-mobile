@@ -18,6 +18,7 @@
     "expo-camera": "~9.0.0",
     "expo-face-detector": "~8.3.0",
     "expo-image-manipulator": "~8.3.0",
+    "expo-location": "^10.0.0",
     "expo-permissions": "~9.3.0",
     "expo-status-bar": "~1.0.2",
     "face-api.js": "^0.22.2",

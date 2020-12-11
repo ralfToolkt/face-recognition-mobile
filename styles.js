@@ -16,7 +16,8 @@ export default styles = StyleSheet.create({
         margin: 20,
     },
     logText: {
-        fontSize: 24,
-        color: 'red'
+        fontSize: 15,
+        color: 'red',
+        paddingLeft: 20
     }
 });

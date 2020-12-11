@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext} from 'react'
 import { View, Text } from 'react-native'
-import { List, ListItem, Container, Content, Left, Right} from 'native-base'
+import { List, ListItem, Container, Content, Left, Right, Body} from 'native-base'
 import styles from '../../styles'
 import axios from 'axios'
 import { UserContext } from '../contexts/UserContext.js'
@@ -38,10 +38,14 @@ export default function AttendanceLogs() {
                         row++
                         return (
                         <ListItem key={item.id.toString()} style={{ backgroundColor: row%2 !== 0? "#c9c9c9": "#f0f0f0" }}> 
-                                <Left>
+                                {/* <Left>
                                     <Text >{row} </Text>
-                                </Left>
-                                <Text style={styles.logText}>{item.date_time}</Text>
+                                </Left> */}
+                                <Body>
+                                    <Text style={styles.logText}>{item.date_time}</Text>
+                                    <Text></Text>
+                                    <Text note numberOfLines={3} style={styles.logText}>{item.address}</Text>
+                                </Body>
                                 <Right />
                             {/* <Right><Text>{item.date_time}</Text></Right> */}
                             
