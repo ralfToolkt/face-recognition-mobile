@@ -39,7 +39,6 @@ export default function Login({navigation}) {
                 console.log('error ' + e);
             })}
         else { Alert.alert('Login Fail', 'Username and Password is required')}
-        // navigation.navigate('AttendanceLogs')   
          
     }
 

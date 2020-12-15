@@ -155,74 +155,81 @@ export default function HomeScreen() {
     };
 
     if (address) {
-        return (
-            <View style={{ flex: 1 }}>
-                {/* <Image
+        if (camera.hasCameraPermission === null) {
+            return <Text>Null</Text>;
+        } else if (camera.hasCameraPermission === false) {
+            return <Text>No access to camera</Text>;
+        } else {
+            return (
+                <View style={{ flex: 1 }}>
+                    {/* <Image
                     source={{ uri: imageUri }}
                     style={{ width: 300, height: 300, resizeMode: 'contain' }}
                 /> */}
-                <Camera style={{ flex: 1 }} type={camera.type}
-                    ref={ref => setCameraSnap(ref)}
-                    onFacesDetected={handleFacesDetected}
-                    faceDetectorSettings={{
-                        mode: FaceDetector.Constants.Mode.accurate,
-                        detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                        runClassifications: FaceDetector.Constants.Classifications.none,
-                        minDetectionInterval: 200,
-                        tracking: true,
-                    }}
-                >
+                    <Camera style={{ flex: 1 }} type={camera.type}
+                        ref={ref => setCameraSnap(ref)}
+                        onFacesDetected={handleFacesDetected}
+                        faceDetectorSettings={{
+                            mode: FaceDetector.Constants.Mode.accurate,
+                            detectLandmarks: FaceDetector.Constants.Landmarks.none,
+                            runClassifications: FaceDetector.Constants.Classifications.none,
+                            minDetectionInterval: 200,
+                            tracking: true,
+                        }}
+                    >
 
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'transparent',
-                            flexDirection: 'row',
-                            position: 'absolute',
-                            bottom: 100,
-                            left: 100
-                        }}>
-                        {camera.faceDetected ?
-                            <TouchableOpacity
-                                onPress={() => snap()}>
-                                <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                                    {' '}Check Attendance{' '}
-                                </Text>
-                            </TouchableOpacity>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'transparent',
+                                flexDirection: 'row',
+                                position: 'absolute',
+                                bottom: 100,
+                                left: 100
+                            }}>
+                            {camera.faceDetected ?
+                                <TouchableOpacity
+                                    onPress={() => snap()}>
+                                    <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                                        {' '}Check Attendance{' '}
+                                    </Text>
+                                </TouchableOpacity>
 
-                            : <Text style={{ color: 'red', fontSize: 25 }}>
-                                No Face Detected
+                                : <Text style={{ color: 'red', fontSize: 25 }}>
+                                    No Face Detected
                         </Text>}
 
-                    </View>
-                    <View
+                        </View>
+                        <View
 
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'transparent',
-                            flexDirection: 'row',
-                        }}>
-                        <TouchableOpacity
                             style={{
-                                flex: 0.1,
-                                alignSelf: 'flex-end',
-                                alignItems: 'center',
-                            }}
-                            onPress={() => {
-                                setCamera({
-                                    type:
-                                        camera.type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back,
-                                });
+                                flex: 1,
+                                backgroundColor: 'transparent',
+                                flexDirection: 'row',
                             }}>
-                            <Text style={{ fontSize: 24, marginBottom: 10, color: 'white' }}>
-                                {' '}
+                            <TouchableOpacity
+                                style={{
+                                    flex: 0.1,
+                                    alignSelf: 'flex-end',
+                                    alignItems: 'center',
+                                }}
+                                onPress={() => {
+                                    setCamera({
+                                        type:
+                                            camera.type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back,
+                                    });
+                                }}>
+                                <Text style={{ fontSize: 24, marginBottom: 10, color: 'white' }}>
+                                    {' '}
                                 Flip{' '}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </Camera>
-            </View>
-        );
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Camera>
+                </View>
+            );
+        }
+        
     } else {
         return (
             <View style={styles.container}>
@@ -230,11 +237,5 @@ export default function HomeScreen() {
             </View>
         )
     } 
-    if (camera.hasCameraPermission === null) {
-        return <Text>Null</Text>;
-    } else if (camera.hasCameraPermission === false) {
-        return <Text>No access to camera</Text>;
-    } else {
-        return null
-    }
+    
 }
