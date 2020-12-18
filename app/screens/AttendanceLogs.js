@@ -42,6 +42,7 @@ export default function AttendanceLogs() {
                                     <Text >{row} </Text>
                                 </Left> */}
                                 <Body>
+                                    <Text style={styles.logTextTitle}>{item.name.toUpperCase()}</Text>
                                     <Text style={styles.logText}>{item.date_time}</Text>
                                     <Text></Text>
                                     <Text note numberOfLines={3} style={styles.logText}>{item.address}</Text>

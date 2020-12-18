@@ -25,12 +25,28 @@ export default function StackNav() {
         unmountInactiveRoutes: true
     })
 
+    const drawerNavClient = createDrawerNavigator({
+        AttendanceLogs,
+        RegisterFace
+    }, {
+        unmountInactiveRoutes: true
+    })
+
     // const HomeScreenCon = (user ? drawerNav : RegisterFace)
 
     const mainScreen = createStackNavigator({
         Login,
         HomeScreenCon: {
             screen: drawerNav,
+            navigationOptions: {
+                headerLeft: () => false,
+                headerBackTitleVisible: true,
+                headerTitleAlign: 'center',
+                headerTitle: 'Attendance'
+            },
+        },
+        HomeScreenClient: {
+            screen: drawerNavClient,
             navigationOptions: {
                 headerLeft: () => false,
                 headerBackTitleVisible: true,

@@ -27,8 +27,9 @@ export default function Login({navigation}) {
                 if (res.data.token){
                     console.log(res.data);
                     setUser(res.data)
-                    const navigateTo = res.data.profile ? 'HomeScreenCon' : 'RegisterFace'
-                    navigation.navigate(navigateTo, {
+                    // const navigateTo = res.data.profile ? 'HomeScreenCon' : 'RegisterFace'
+                    // const navigateTo = res.data.type == 1 ? 'HomeScreenCon' : 'HomeScreenClient'
+                    navigation.navigate('HomeScreenCon', {
                         user: res.data.name
                     })
                 } else {

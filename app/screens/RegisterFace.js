@@ -142,6 +142,7 @@ export default function RegisterFace({navigation}) {
                     { text: "Nope", onPress: toggleAlertNope },
                     { text: "Yes", onPress: toggleAlertYes }
                 ]}
+                style={{position: 'absolute'}}
             />    
             <Camera style={{ flex: 1 }} type={type}
                 ref={ref => setCamera(ref)}

@@ -19,5 +19,10 @@ export default styles = StyleSheet.create({
         fontSize: 15,
         color: 'red',
         paddingLeft: 20
+    },
+    logTextTitle: {
+        fontSize: 24,
+        color: '#ff0000',
+        paddingLeft: 20
     }
 });
